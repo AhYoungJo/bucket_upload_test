@@ -6,7 +6,7 @@ const multerS3 = require("multer-s3"); // aws multer-s3의 파일 업로드하�
 require("dotenv").config();
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT;
 
 // aws 설정
 aws.config.update({
@@ -22,8 +22,8 @@ const upload = multer({
     //storage multers3설정
     storage: multerS3({
         s3, //s3 : s3
-        bucket: "aymybucket",
-        acl: "public-read", //파일 접근 권한: 업로드된 파일 공개하기
+        bucket: process.env.BUCKET,
+        acl: process.env.ACL, //파일 접근 권한: 업로드된 파일 공개하기
         metadata: function (req, file, cb) {
             cb(null, { fieldName: file.fieldname });
         },
