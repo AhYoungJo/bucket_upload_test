@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>파일 업로드 aws</h1>
+        <form onsubmit="upload(event)">
+            <!-- <form> -->
+            <input type="file" id="files" multiple /><br />
+            <!-- <button type="button" onclick="upload()">업로드</button> -->
+            <button type="submit">업로드</button>
+        </form>
+        <br />
+        <div class="result"></div>
+        <script>
+            const resultBox = document.querySelector(".result");
+            async function upload(e) {
+                e.preventDefault();
+                //파일에 접근
+                const file = document.querySelector("#files");
+                console.log(file.files);
+                //폼 데이터 생성
+                const formData = new FormData();
+                //파일이 여러개이므로 반복문 사용
+                for (let i = 0; i < file.files.length; i++) {
+                    // upload url에 files라는 이름의 배열에 파일 하나씩 업로드
+                    formData.append("files", file.files[i]);
+                }
+
+                const res = await axios({
+                    method: "POST",
+                    url: "upload",
+                    data: formData,
+                    //multer 데이터는 그냥 보내서는 안 되고 무조건 헤더에 content-type을 넣어서 보내야 한다.
+                    header: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                console.log("res", res);
+                res.data.forEach((value) => {
+                    const img = document.createElement("img");
+                    img.src = value.location;
+                    img.style.width = "300px";
+                    resultBox.append("files", file.files[i]);
+                });
+            }
+        </script>
+    </body>
+</html>
